@@ -1,0 +1,34 @@
+{
+  "name": "sort-anything",
+  "version": "0.0.0",
+  "description": "Sort arrays in a functional programming way. A simple & small integration.",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "typings": "types/index.d.ts",
+  "scripts": {
+    "test": "ava",
+    "rollup": "rollup -c build/rollup.js",
+    "build": "npm run rollup && npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mesqueeb/sort-anything.git"
+  },
+  "keywords": [
+    "sort"
+  ],
+  "author": "Luca Ban - Mesqueeb",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mesqueeb/sort-anything/issues"
+  },
+  "homepage": "https://github.com/mesqueeb/sort-anything#readme",
+  "devDependencies": {
+    "ava": "^2.4.0",
+    "rollup-plugin-typescript2": "^0.24.3",
+    "typescript": "^3.6.3"
+  },
+  "dependencies": {
+    "copy-anything": "^1.5.0"
+  }
+}
