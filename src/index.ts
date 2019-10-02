@@ -12,7 +12,11 @@ function sortByFn (propName, direction = 'asc') {
   return function (a, b) {
     a = a[propName]
     b = b[propName]
-    if (direction === 'asc' || !direction) {
+    if (a === undefined) a = '𐀿' // last unicode char?
+    if (b === undefined) b = '𐀿' // last unicode char?
+    a = String(a)
+    b = String(b)
+    if (direction === 'asc') {
       return (a > b)
         ? 1
         : ((b > a)

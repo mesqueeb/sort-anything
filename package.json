@@ -1,6 +1,6 @@
 {
   "name": "sort-anything",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Sort arrays in a functional programming way. A simple & small integration.",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
