@@ -1,7 +1,38 @@
 import test from 'ava'
 import sort from '../dist/index.cjs'
 
-test('t', t => {
+// const typeOrder = {
+//   boolean: 0,
+//   number: 1,
+//   string: 2,
+//   symbol: 3,
+//   null: 4,
+//   undefined: 5,
+//   function: 6,
+//   object: 7,
+// }
+
+test('mixed type sort', t => {
+  let array, res
+  array = [{id: 1}, {id: undefined}, {id: true}, {id: 'a'}, {id: undefined}]
+  res = sort(array).by('id', 'asc')
+  t.deepEqual(res, [
+    {id: true},
+    {id: 1},
+    {id: 'a'},
+    {id: undefined},
+    {id: undefined},
+  ])
+  array = [{id: 'modified'}, {id: undefined}, {id: true}]
+  res = sort(array).by('id', 'asc')
+  t.deepEqual(res, [
+    {id: true},
+    {id: 'modified'},
+    {id: undefined},
+  ])
+})
+
+test('regular ordering of single types', t => {
   let array, res
   array = [{id: 'c'}, {id: 'a'}, {id: 'b'}]
   res = sort(array).by('id', 'asc')
@@ -29,20 +60,17 @@ test('t', t => {
     {id: 2},
     {id: 1},
   ])
-  array = [{id: 1}, {id: undefined}, {id: true}, {id: 'a'}, {id: undefined}]
+  array = [{id: false}, {id: true}, {id: false}]
   res = sort(array).by('id', 'asc')
   t.deepEqual(res, [
-    {id: 1},
-    {id: 'a'},
+    {id: false},
     {id: true},
-    {id: undefined},
-    {id: undefined},
+    {id: true},
   ])
-  array = [{id: 'modified'}, {id: undefined}, {id: true}]
   res = sort(array).by('id', 'asc')
   t.deepEqual(res, [
-    {id: 'modified'},
     {id: true},
-    {id: undefined},
+    {id: true},
+    {id: false},
   ])
 })

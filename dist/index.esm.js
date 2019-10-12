@@ -1,5 +1,15 @@
 import copy from 'copy-anything';
 
+var typeOrder = {
+    boolean: 0,
+    number: 1,
+    string: 2,
+    symbol: 3,
+    "null": 4,
+    undefined: 5,
+    "function": 6,
+    object: 7,
+};
 /**
  * A function to pass to the native Array.proto.sort() function. Used to sort by a propname in an array of objects.
  *
@@ -13,12 +23,12 @@ function sortByFn(propName, direction) {
     return function (a, b) {
         a = a[propName];
         b = b[propName];
-        if (a === undefined)
-            a = '𐀿'; // last unicode char?
-        if (b === undefined)
-            b = '𐀿'; // last unicode char?
-        a = String(a);
-        b = String(b);
+        var typeA = (a === null) ? 'null' : typeof a;
+        var typeB = (b === null) ? 'null' : typeof b;
+        if (typeA !== typeB) {
+            a = typeOrder[typeA];
+            b = typeOrder[typeB];
+        }
         if (direction === 'asc') {
             return (a > b)
                 ? 1
