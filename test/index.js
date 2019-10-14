@@ -30,6 +30,31 @@ test('mixed type sort', t => {
     {id: 'modified'},
     {id: undefined},
   ])
+  // all types
+  const object = {}
+  const symbol = Symbol('s')
+  const fn = () => {}
+  array = [
+    {id: undefined},
+    {id: null},
+    {id: 'string'},
+    {id: object},
+    {id: false},
+    {id: symbol},
+    {id: 0},
+    {id: fn},
+  ]
+  res = sort(array).by('id', 'asc')
+  t.deepEqual(res, [
+    {id: false},
+    {id: 0},
+    {id: 'string'},
+    {id: symbol},
+    {id: object},
+    {id: fn},
+    {id: null},
+    {id: undefined},
+  ])
 })
 
 test('regular ordering of single types', t => {
@@ -64,13 +89,107 @@ test('regular ordering of single types', t => {
   res = sort(array).by('id', 'asc')
   t.deepEqual(res, [
     {id: false},
-    {id: true},
+    {id: false},
     {id: true},
   ])
-  res = sort(array).by('id', 'asc')
+  res = sort(array).by('id', 'desc')
   t.deepEqual(res, [
     {id: true},
-    {id: true},
     {id: false},
+    {id: false},
+  ])
+})
+
+test('strings and dates', t => {
+  let array, res
+  const d2000 = new Date('2000/01/01')
+  const d2001 = new Date('2001/01/01')
+  const d2002 = new Date('2002/01/01')
+  array = [
+    {id: d2002},
+    {id: d2000},
+    {id: d2001},
+  ]
+  res = sort(array).by('id', 'asc')
+  t.deepEqual(res, [
+    {id: d2000},
+    {id: d2001},
+    {id: d2002},
+  ])
+  res = sort(array).by('id', 'desc')
+  t.deepEqual(res, [
+    {id: d2002},
+    {id: d2001},
+    {id: d2000},
+  ])
+  // with strings
+  array = [
+    {id: d2002},
+    {id: '2003/01/01'},
+    {id: d2000},
+    {id: '1999/01/01'},
+    {id: d2001},
+  ]
+  res = sort(array).by('id', 'asc')
+  t.deepEqual(res, [
+    {id: '1999/01/01'},
+    {id: '2003/01/01'},
+    {id: d2000},
+    {id: d2001},
+    {id: d2002},
+  ])
+})
+
+
+test('double sorting!!!', t => {
+  let array, res
+  array = [
+    {id: 'c', nr: 1},
+    {id: 'c', nr: 3},
+    {id: 'c', nr: 2},
+    {id: 'b', nr: 2},
+    {id: 'b', nr: 3},
+    {id: 'a', nr: 0},
+    {id: 'a', nr: 1},
+  ]
+  res = sort(array).by(['id', 'asc'], ['nr', 'desc'])
+  t.deepEqual(res, [
+    {id: 'a', nr: 1},
+    {id: 'a', nr: 0},
+    {id: 'b', nr: 3},
+    {id: 'b', nr: 2},
+    {id: 'c', nr: 3},
+    {id: 'c', nr: 2},
+    {id: 'c', nr: 1},
+  ])
+  res = sort(array).by(['id', 'desc'], ['nr', 'desc'])
+  t.deepEqual(res, [
+    {id: 'c', nr: 3},
+    {id: 'c', nr: 2},
+    {id: 'c', nr: 1},
+    {id: 'b', nr: 3},
+    {id: 'b', nr: 2},
+    {id: 'a', nr: 1},
+    {id: 'a', nr: 0},
+  ])
+  res = sort(array).by(['id', 'asc'], ['nr', 'asc'])
+  t.deepEqual(res, [
+    {id: 'a', nr: 0},
+    {id: 'a', nr: 1},
+    {id: 'b', nr: 2},
+    {id: 'b', nr: 3},
+    {id: 'c', nr: 1},
+    {id: 'c', nr: 2},
+    {id: 'c', nr: 3},
+  ])
+  res = sort(array).by(['id', 'desc'], ['nr', 'asc'])
+  t.deepEqual(res, [
+    {id: 'c', nr: 1},
+    {id: 'c', nr: 2},
+    {id: 'c', nr: 3},
+    {id: 'b', nr: 2},
+    {id: 'b', nr: 3},
+    {id: 'a', nr: 0},
+    {id: 'a', nr: 1},
   ])
 })
