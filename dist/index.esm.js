@@ -1,5 +1,5 @@
 import copy from 'copy-anything';
-import { isArray } from 'is-what';
+import { isString } from 'is-what';
 
 var typeOrderMap = {
     boolean: 0,
@@ -68,6 +68,9 @@ function getSortFn(orderSets) {
         return recursivelyManageComparing(compareArrayA[0], compareArrayB[0], compareArrayA.slice(1), compareArrayB.slice(1));
     };
 }
+function isSingleOrderSet(payload) {
+    return isString(payload[0]);
+}
 var Sort = /** @class */ (function () {
     function Sort(array) {
         this.array = copy(array);
@@ -78,8 +81,7 @@ var Sort = /** @class */ (function () {
             args[_i] = arguments[_i];
         }
         var array = this.array;
-        // @ts-ignore
-        var orderSets = !isArray(args[0]) ? [args] : args;
+        var orderSets = isSingleOrderSet(args) ? [args] : args;
         var sortFn = getSortFn(orderSets);
         array.sort(sortFn);
         return array;

@@ -1,5 +1,5 @@
 import copy from 'copy-anything'
-import { isArray } from 'is-what'
+import { isString } from 'is-what'
 
 const typeOrderMap = {
   boolean: 0,
@@ -80,6 +80,10 @@ function getSortFn (orderSets: string[][]) {
   }
 }
 
+function isSingleOrderSet (payload: (string[] | string[][])): payload is string[] {
+  return isString(payload[0])
+}
+
 class Sort {
   array: any[]
   constructor (array: any[]) {
@@ -87,8 +91,7 @@ class Sort {
   }
   by (...args: (string[] | string[][])) {
     const { array } = this
-    // @ts-ignore
-    const orderSets: string[][] = !isArray(args[0]) ? [args] : args
+    const orderSets = isSingleOrderSet(args) ? [args] : args
     const sortFn = getSortFn(orderSets)
     array.sort(sortFn)
     return array
