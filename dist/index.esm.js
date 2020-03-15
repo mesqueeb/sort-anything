@@ -1,4 +1,4 @@
-import copy from 'copy-anything';
+import { copy } from 'copy-anything';
 import { isString } from 'is-what';
 
 var typeOrderMap = {
@@ -14,17 +14,9 @@ var typeOrderMap = {
 function compareAB(a, b, direction) {
     if (direction === void 0) { direction = 'asc'; }
     if (direction === 'asc') {
-        return (a > b)
-            ? 1
-            : ((b > a)
-                ? -1
-                : 0);
+        return a > b ? 1 : b > a ? -1 : 0;
     }
-    return (a < b)
-        ? 1
-        : ((b < a)
-            ? -1
-            : 0);
+    return a < b ? 1 : b < a ? -1 : 0;
 }
 /**
  * A function to pass to the native Array.proto.sort() function. Used to sort by a propname in an array of objects.
@@ -42,7 +34,9 @@ function getSortFn(orderSets) {
                 var type = value === null ? 'null' : typeof value;
                 var typeAsNumber = typeOrderMap[type];
                 return {
-                    value: value, direction: direction, typeAsNumber: typeAsNumber
+                    value: value,
+                    direction: direction,
+                    typeAsNumber: typeAsNumber,
                 };
             });
         }
@@ -71,23 +65,19 @@ function getSortFn(orderSets) {
 function isSingleOrderSet(payload) {
     return isString(payload[0]);
 }
-var Sort = /** @class */ (function () {
-    function Sort(array) {
-        this.array = copy(array);
-    }
-    Sort.prototype.by = function () {
+var sort = function (array) {
+    array = copy(array);
+    function by() {
         var args = [];
         for (var _i = 0; _i < arguments.length; _i++) {
             args[_i] = arguments[_i];
         }
-        var array = this.array;
         var orderSets = isSingleOrderSet(args) ? [args] : args;
         var sortFn = getSortFn(orderSets);
         array.sort(sortFn);
         return array;
-    };
-    return Sort;
-}());
-var sort = function (array) { return new Sort(array); };
+    }
+    return { by: by };
+};
 
-export default sort;
+export { sort, typeOrderMap };

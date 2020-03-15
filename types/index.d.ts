@@ -1,7 +1,13 @@
-declare class Sort {
-    array: any[];
-    constructor(array: any[]);
-    by(...args: (string[] | string[][])): any[];
-}
-declare const sort: (array: any[]) => Sort;
-export default sort;
+export declare const typeOrderMap: {
+    boolean: number;
+    number: number;
+    string: number;
+    symbol: number;
+    object: number;
+    function: number;
+    null: number;
+    undefined: number;
+};
+export declare const sort: <T extends any[]>(array: T) => {
+    by: (...args: string[] | string[][]) => T;
+};

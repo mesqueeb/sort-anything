@@ -1,7 +1,7 @@
-import copy from 'copy-anything'
+import { copy } from 'copy-anything'
 import { isString } from 'is-what'
 
-const typeOrderMap = {
+export const typeOrderMap = {
   boolean: 0,
   number: 1,
   string: 2,
@@ -12,19 +12,11 @@ const typeOrderMap = {
   undefined: 7,
 }
 
-function compareAB (a, b, direction = 'asc') {
+function compareAB (a, b, direction = 'asc'): number {
   if (direction === 'asc') {
-    return (a > b)
-      ? 1
-      : ((b > a)
-        ? -1
-        : 0)
+    return a > b ? 1 : b > a ? -1 : 0
   }
-  return (a < b)
-    ? 1
-    : ((b < a)
-      ? -1
-      : 0)
+  return a < b ? 1 : b < a ? -1 : 0
 }
 
 /**
@@ -43,22 +35,17 @@ function getSortFn (orderSets: string[][]) {
         const type = value === null ? 'null' : typeof value
         const typeAsNumber = typeOrderMap[type]
         return {
-          value, direction, typeAsNumber
+          value,
+          direction,
+          typeAsNumber,
         }
       })
     }
     const compareArrayA = getCompareArray(a, orderSets)
     const compareArrayB = getCompareArray(b, orderSets)
     function recursivelyManageComparing (setA, setB, arrayA, arrayB) {
-      const {
-        typeAsNumber: typeAsNumberA,
-        value: valueA,
-        direction,
-      } = setA
-      const {
-        typeAsNumber: typeAsNumberB,
-        value: valueB,
-      } = setB
+      const { typeAsNumber: typeAsNumberA, value: valueA, direction } = setA
+      const { typeAsNumber: typeAsNumberB, value: valueB } = setB
       // different type:
       if (typeAsNumberA !== typeAsNumberB) {
         return compareAB(typeAsNumberA, typeAsNumberB, direction)
@@ -80,24 +67,17 @@ function getSortFn (orderSets: string[][]) {
   }
 }
 
-function isSingleOrderSet (payload: (string[] | string[][])): payload is string[] {
+function isSingleOrderSet (payload: string[] | string[][]): payload is string[] {
   return isString(payload[0])
 }
 
-class Sort {
-  array: any[]
-  constructor (array: any[]) {
-    this.array = copy(array)
-  }
-  by (...args: (string[] | string[][])) {
-    const { array } = this
+export const sort = <T extends any[]>(array: T): { by: (...args: string[] | string[][]) => T } => {
+  array = copy(array)
+  function by (...args: string[] | string[][]): T {
     const orderSets = isSingleOrderSet(args) ? [args] : args
     const sortFn = getSortFn(orderSets)
     array.sort(sortFn)
     return array
   }
+  return { by }
 }
-
-const sort = (array: any[]) => new Sort(array)
-
-export default sort
