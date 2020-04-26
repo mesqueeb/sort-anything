@@ -1,4 +1,4 @@
-# Sort anything 🗃 (WIP)
+# Sort anything 🗃 (Archived)
 
 > This (short-lived) library was merely an experiment.
 > It's currently archived in favour of [snovakovic/fast-sort](https://github.com/snovakovic/fast-sort). His sorting library is easy to use, supports typescript and is blazing fast!
